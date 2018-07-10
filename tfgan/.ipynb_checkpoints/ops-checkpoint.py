@@ -57,3 +57,24 @@ def deconv2d(x,in_channel,out_channel,stride,name,):
         layer = tf.nn.conv2d_transpose(x,filter=w,output_shape=out_shape,
                                        strides=[1,stride,stride,1],padding='SAME')
         return layer
+
+# image helper functions
+def convert_to_tanh(im):
+    #print("Converting Image in tanh range ... !")
+    max_value = np.round(np.max(im))
+    min_value = np.round(np.min(im))
+    if(max_value == 1 and min_value == -1):
+        #print("Array already in tanh range")
+        return im
+    return np.round(((im/max_value)*2)-1,decimals=2)
+
+def convert_from_tanh(im):
+    #print("Converting image from tanh to 0-255 range")
+    max_value = np.round(np.max(im))
+    min_value = np.round(np.min(im))
+    if(max_value == 255 and min_value == 0):
+        # print("Array already in 0-255 range")
+        return im
+    if(max_value == 1 and min_value ==0 ):
+        return im*255
+    return np.round(((im+1)/2)*max_value,decimals=2)
